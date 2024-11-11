@@ -10,10 +10,10 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 **To check architecture of linux os type**<br>
 ```uname -m```<br>
 
-**check for sycall**
+**check for sycall**<br>
 ``` cat /proc/kallsyms | grep sys_mkdir```<br>
 
-**in my case**
+**in my case**<br>
 **ffffffff90babf40 T __x64_sys_mkdir**<br>
 
 
