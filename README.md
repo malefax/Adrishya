@@ -7,8 +7,15 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 
 ## Caution
 **only work for x86_64**<br>
-**To check architecture of linux os type**
-```uname -m```
+**To check architecture of linux os type**<br>
+```uname -m```<br>
+
+**check for sycall**
+``` cat /proc/kallsyms | grep sys_mkdir```<br>
+
+**in my case**
+**ffffffff90babf40 T __x64_sys_mkdir**<br>
+
 
 ## Installation
 **1.clone the repository**<br>
@@ -19,6 +26,21 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 
 **3. generate required files by**<br>
 ```sudo make```
+
+## Uses
+**insert the batchfile by**<br>
+```sudo insmod Adrishya.ko```<br>
+
+**now try to make directory in new bash session**<br>
+```mkdir test```<br>
+
+## Result
+**mkdir: cannot create directory ‘test’: Permission denied**<br>
+
+### status
+```dmesg | tail -n 5```<br>
+**[ 5195.072954] mkdir_monitor: Loaded**<br>
+**[ 5215.531106] Directory creation blocked: test**<br>
 
 
 
