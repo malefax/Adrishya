@@ -188,5 +188,5 @@ module_exit(mkdir_monitor_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Directory Creation Monitor");
-MODULE_AUTHOR("Your Name");
+MODULE_AUTHOR("malefax");
 
