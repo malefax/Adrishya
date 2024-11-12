@@ -48,5 +48,5 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 **[ 5195.072954] mkdir_monitor: Loaded**<br>
 **[ 5215.531106] Directory creation blocked: test**<br>
 
-**Check out my blog post about the project: **[here](https://medium.com/@_._.._/mkdir-api-hook-a-pathway-to-an-lkm-rootkit-in-linux-ae5e3fa6d4b8)
+**Check out my blog post about the project:** [here](https://medium.com/@_._.._/mkdir-api-hook-a-pathway-to-an-lkm-rootkit-in-linux-ae5e3fa6d4b8)
 
