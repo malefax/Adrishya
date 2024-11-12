@@ -1,4 +1,5 @@
 # Adrishya
+![Funny GIF](https://i.gifer.com/EsVg.gif)
 
 ## Introduction
 **Adrishya is a Linux kernel module that leverages advanced kernel hooking techniques, specifically using ftrace (the Linux kernel's function tracer) to hook into the mkdir system call. The module is designed to block directory creation attempts in a Linux environment by intercepting and modifying the behavior of the system call responsible for creating directories. This capability is useful for security purposes, such as preventing unauthorized directories from being created on a system.
