@@ -41,6 +41,8 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 ## Result
 **mkdir: cannot create directory ‘test’: Permission denied**<br>
 
+![result](https://i.pinimg.com/originals/17/f4/cd/17f4cd781dbae9d737e117ac64e101ce.gif)
+
 ## Status
 ```dmesg | tail -n 5```<br>
 **[ 5195.072954] mkdir_monitor: Loaded**<br>
