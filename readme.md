@@ -84,7 +84,7 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 ![before.png](before.png)
 
 **2.After inserting batchfile**<br>
-**3.To inserting batch file **<br>
+**3.To inserting batch file**<br>
 
 ```sudo insmod Adrishya2.ko```<br>
 
