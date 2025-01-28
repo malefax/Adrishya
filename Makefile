@@ -4,7 +4,7 @@
 # Define the kernel source directory and module name
 KDIR ?= /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
-MODULE_NAME := Adrishya
+MODULE_NAME := Adrishya2
 
 # Specify object files
 obj-m := $(MODULE_NAME).o
