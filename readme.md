@@ -80,12 +80,12 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 
 ##Uses
 **1. Before inserting batchfile**<br>
-![before.png](/home/malefax/before.png)
+![before.png](before.png)
 
 **2.After inserting batchfile**<br>
 **3.To inserting batch file **<br>
 
 ```sudo insmod Adrishya2.ko```<br>
-![after.png](/home/malefax/after.png)
+![after.png](after.png)
 
 
