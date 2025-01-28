@@ -2,9 +2,11 @@
 ![SHIV](https://img.freepik.com/premium-photo/black-lord-shiva-special-maha-shivaratri-made-using-generative-ai-tools_410516-74403.jpg)
 
 ## Introduction
-**Adrishya is a Linux kernel module that leverages advanced kernel hooking techniques, specifically using ftrace (the Linux kernel's function tracer) to hook into the mkdir system call. The module is designed to block directory creation attempts in a Linux environment by intercepting and modifying the behavior of the system call responsible for creating directories. This capability is useful for security purposes, such as preventing unauthorized directories from being created on a system.
-The module also demonstrates how kernel hooks, credential manipulation, and ftrace-based hooking can be combined for both monitoring and controlling system behavior in a highly efficient and stealthy manner.**<br>
+**Adrishya is a Linux kernel module that leverages advanced kernel hooking techniques, specifically using ftrace (the Linux kernel's function tracer), to hook into the mkdir system call. The module is designed to block directory creation attempts in a Linux environment by intercepting and modifying the behavior of the system call responsible for creating directories. This capability is useful for security purposes, such as preventing unauthorized directories from being created on a system.
 
+In addition to directory creation blocking, Adrishya also includes hooks into tcp4_seq_show and tcp6_seq_show, enhancing privacy by hiding network ports from being exposed in /proc/net/tcp and /proc/net/tcp6. By intercepting these functions, the module prevents unauthorized visibility into active network connections, adding an additional layer of stealth and security.
+
+The module demonstrates how kernel hooks, credential manipulation, and ftrace-based hooking can be combined to monitor and control system behavior in a highly efficient and stealthy manner.**<br>
 ```mermaid
 
    flowchart TD
