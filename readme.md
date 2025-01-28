@@ -54,7 +54,6 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 ```uname -m```<br>
 ## Installation
 
-![hackerman](https://media1.tenor.com/images/05729f2e534ba37254f95b39e9647d29/tenor.gif?itemid=3552791)
 
 **1.clone the repository**<br>
 ```git clone -b tcp  https://github.com/malefax/Adrishya.git```
@@ -84,7 +83,6 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 ![before.png](before.png)
 
 **2.After inserting batchfile**<br>
-**3.To inserting batch file**<br>
 
 ```sudo insmod Adrishya2.ko```<br>
 
