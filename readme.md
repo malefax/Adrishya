@@ -8,8 +8,7 @@ In addition to directory creation blocking, Adrishya also includes hooks into tc
 
 The module demonstrates how kernel hooks, credential manipulation, and ftrace-based hooking can be combined to monitor and control system behavior in a highly efficient and stealthy manner.**<br>
 ```mermaid
-
-   flowchart TD
+flowchart TD
     subgraph "User Space"
         A[User Program] -..->|mkdir syscall| B[VFS Layer]
     end
@@ -37,18 +36,18 @@ The module demonstrates how kernel hooks, credential manipulation, and ftrace-ba
         N -.->|4| F
     end
 
-    classDef userspace fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef kernel fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef hook fill:#fda,stroke:#333,stroke-width:2px;
-    classDef block fill:#faa,stroke:#333,stroke-width:2px;
-    classDef installation fill:#dfd,stroke:#333,stroke-width:2px;
+    classDef userspace fill:#f9f,stroke:#333,stroke-width:2px,color:#000;
+    classDef kernel fill:#bbf,stroke:#333,stroke-width:2px,color:#000;
+    classDef hook fill:#fda,stroke:#333,stroke-width:2px,color:#000;
+    classDef block fill:#faa,stroke:#333,stroke-width:2px,color:#000;
+    classDef installation fill:#dfd,stroke:#333,stroke-width:2px,color:#000;
 
     class A userspace;
     class B,C,D kernel;
     class F,G hook;
     class I block;
     class K,L,M,N installation;
-```
+  ```
 
 ## Caution
 **only work for x86_64**<br>
