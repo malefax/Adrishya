@@ -5,8 +5,7 @@
 The module also demonstrates how kernel hooks, credential manipulation, and ftrace-based hooking can be combined for both monitoring and controlling system behavior in a highly efficient and stealthy manner.**<br>
 
 ```mermaid
-
-   flowchart TD
+flowchart TD
     subgraph "User Space"
         A[User Program] -..->|mkdir syscall| B[VFS Layer]
     end
@@ -34,11 +33,11 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
         N -.->|4| F
     end
 
-    classDef userspace fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef kernel fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef hook fill:#fda,stroke:#333,stroke-width:2px;
-    classDef block fill:#faa,stroke:#333,stroke-width:2px;
-    classDef installation fill:#dfd,stroke:#333,stroke-width:2px;
+    classDef userspace fill:#f9f,stroke:#333,stroke-width:2px,color:#000;
+    classDef kernel fill:#bbf,stroke:#333,stroke-width:2px,color:#000;
+    classDef hook fill:#fda,stroke:#333,stroke-width:2px,color:#000;
+    classDef block fill:#faa,stroke:#333,stroke-width:2px,color:#000;
+    classDef installation fill:#dfd,stroke:#333,stroke-width:2px,color:#000;
 
     class A userspace;
     class B,C,D kernel;
@@ -60,8 +59,6 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 
 
 ## Installation
-
-![hackerman](https://media1.tenor.com/images/05729f2e534ba37254f95b39e9647d29/tenor.gif?itemid=3552791)
 
 **1.clone the repository**<br>
 ```git clone https://github.com/malefax/Adrishya.git```
