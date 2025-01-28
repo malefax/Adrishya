@@ -75,26 +75,17 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
   ```
 **6. By default both is enabled**
 
-**6. generate required files by**<br>
-```sudo make```
+**7. generate required files by**<br>
+```sudo make```<br>
 
-## Uses
+##Uses
+**1. Before inserting batchfile**<br>
+![before.png](/home/malefax/before.png)
 
-**insert the batchfile by**<br>
+**2.After inserting batchfile**<br>
+**3.To inserting batch file **<br>
+
 ```sudo insmod Adrishya2.ko```<br>
+![after.png](/home/malefax/after.png)
 
-**now try to make directory in new bash session**<br>
-```mkdir test```<br>
-
-## Result
-**mkdir: cannot create directory ‘test’: Permission denied**<br>
-
-![result](https://i.pinimg.com/originals/17/f4/cd/17f4cd781dbae9d737e117ac64e101ce.gif)
-
-## Status
-```dmesg | tail -n 5```<br>
-**[ 5195.072954] mkdir_monitor: Loaded**<br>
-**[ 5215.531106] Directory creation blocked: test**<br>
-
-**Check out my blog post about the project:** [here](https://medium.com/@_._.._/mkdir-api-hook-a-pathway-to-an-lkm-rootkit-in-linux-ae5e3fa6d4b8)
 
