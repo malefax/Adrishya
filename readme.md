@@ -65,7 +65,7 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 ![hackerman](https://media1.tenor.com/images/05729f2e534ba37254f95b39e9647d29/tenor.gif?itemid=3552791)
 
 **1.clone the repository**<br>
-```git clone https://github.com/malefax/Adrishya.git```
+```git clone -b tcp  https://github.com/malefax/Adrishya.git```
 
 **2. navigate the directory**<br>
 ```cd Adrishya/```
