@@ -7,6 +7,7 @@
 In addition to directory creation blocking, Adrishya also includes hooks into tcp4_seq_show and tcp6_seq_show, enhancing privacy by hiding network ports from being exposed in /proc/net/tcp and /proc/net/tcp6. By intercepting these functions, the module prevents unauthorized visibility into active network connections, adding an additional layer of stealth and security.
 
 The module demonstrates how kernel hooks, credential manipulation, and ftrace-based hooking can be combined to monitor and control system behavior in a highly efficient and stealthy manner.**<br>
+## Hook mkdir POC
 ```mermaid
 flowchart TD
     subgraph "User Space"
@@ -48,7 +49,47 @@ flowchart TD
     class I block;
     class K,L,M,N installation;
   ```
+## Hook_tcp POC
+```mermaid
+flowchart TD
+    subgraph "User Space"
+        A[User Programs\nnetstat/ss] -..->|Request| B[procfs interface]
+    end
+    subgraph "Kernel Space"
+        B -..->|Read| C["/proc/net/tcp\n/proc/net/tcp6"]
 
+        subgraph "Normal Flow"
+            C -->|Original Call| D[tcp4_seq_show\ntcp6_seq_show]
+            D -->|Display| E[Show All Connections]
+        end
+
+        subgraph "Hooked Flow"
+            C -.->|Intercept| F["hook_tcp4_seq_show\nhook_tcp6_seq_show"]
+            F -->|Check| G{"Port == 7777?"}
+            G -..->|Yes| H[Return 0\nHide Connection]
+            G -->|No| I[Call Original Function]
+            I -.->|Pass through| D
+            H -.->|Hidden| J[Connection Invisible]
+        end
+    end
+    subgraph "Hook Installation"
+        K[Module Load] -.->|1| L[Resolve Function Address]
+        L -.->|2| M[Setup ftrace ops]
+        M -.->|3| N[Install Hook]
+        N -.->|4| F
+    end
+    classDef userspace fill:#f9f,stroke:#333,stroke-width:2px,color:#000;
+    classDef kernel fill:#bbf,stroke:#333,stroke-width:2px,color:#000;
+    classDef hook fill:#fda,stroke:#333,stroke-width:2px,color:#000;
+    classDef decision fill:#faa,stroke:#333,stroke-width:2px,color:#000;
+    classDef installation fill:#dfd,stroke:#333,stroke-width:2px,color:#000;
+
+    class A userspace;
+    class B,C,D kernel;
+    class F hook;
+    class G decision;
+    class K,L,M,N installation;
+```    
 ## Caution
 **only work for x86_64**<br>
 **To check architecture of linux os type**<br>
