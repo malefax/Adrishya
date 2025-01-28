@@ -52,14 +52,6 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 **only work for x86_64**<br>
 **To check architecture of linux os type**<br>
 ```uname -m```<br>
-
-**check for sycall**<br>
-``` cat /proc/kallsyms | grep sys_mkdir```<br>
-
-**in my case**<br>
-**ffffffff90babf40 T __x64_sys_mkdir**<br>
-
-
 ## Installation
 
 ![hackerman](https://media1.tenor.com/images/05729f2e534ba37254f95b39e9647d29/tenor.gif?itemid=3552791)
@@ -70,12 +62,26 @@ The module also demonstrates how kernel hooks, credential manipulation, and ftra
 **2. navigate the directory**<br>
 ```cd Adrishya/```
 
-**3. generate required files by**<br>
+**3. To enable hooks change value 0->1 in macros on Adrishya2.c**<br>
+
+```c
+#define TCP_HOOK_IS_ENABLED 1
+#define MKDIR_HOOK_IS_ENABLED 1
+```
+**4 To disable hook change the value 1->0 in macros on Adrishya2.c**
+  ```c
+  #define TCP_HOOK_IS_ENABLED 0
+  #define MKDIR_HOOK_IS_ENABLED 0
+  ```
+**6. By default both is enabled**
+
+**6. generate required files by**<br>
 ```sudo make```
 
 ## Uses
+
 **insert the batchfile by**<br>
-```sudo insmod Adrishya.ko```<br>
+```sudo insmod Adrishya2.ko```<br>
 
 **now try to make directory in new bash session**<br>
 ```mkdir test```<br>
