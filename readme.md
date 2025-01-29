@@ -114,9 +114,9 @@ flowchart TD
   #define TCP_HOOK_IS_ENABLED 0
   #define MKDIR_HOOK_IS_ENABLED 0
   ```
-**6. By default both is enabled**
+**5. By default both is enabled**
 
-**7. generate required files by**<br>
+**6. generate required files by**<br>
 ```sudo make```<br>
 
 ## Uses
