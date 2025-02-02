@@ -1,5 +1,4 @@
-#
-#Makefile for a simple Linux Kernel Module
+# Makefile for a simple Linux Kernel Module
 
 # Define the kernel source directory and module name
 KDIR ?= /lib/modules/$(shell uname -r)/build
@@ -8,6 +7,12 @@ MODULE_NAME := Adrishya2
 
 # Specify object files
 obj-m := $(MODULE_NAME).o
+
+# Check if the architecture is x86
+ARCH := $(shell uname -m)
+ifneq ($(ARCH), x86_64)
+  $(error This Makefile is only for x86_64 architecture. Detected architecture: $(ARCH))
+endif
 
 # Default target
 all:
@@ -22,3 +27,4 @@ remove:
 	sudo rmmod $(MODULE_NAME)
 
 .PHONY: all clean remove
+
