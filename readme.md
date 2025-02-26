@@ -7,6 +7,7 @@
 **In addition to directory creation blocking, Adrishya also includes hooks into tcp4_seq_show and tcp6_seq_show, enhancing privacy by hiding network ports from being exposed in /proc/net/tcp and /proc/net/tcp6. By intercepting these functions, the module prevents unauthorized visibility into active network connections, adding an additional layer of stealth and security.**
 
 **The module demonstrates how kernel hooks, credential manipulation, and ftrace-based hooking can be combined to monitor and control system behavior in a highly efficient and stealthy manner.**<br>
+
 ## Hook mkdir POC
 ```mermaid
 flowchart TD
