@@ -1,3 +1,9 @@
+/*MIT License
+
+Copyright (c) 2025 nullpointer(malefax)
+Just a slave of God
+*/
+
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/ftrace.h>
