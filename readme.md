@@ -7,6 +7,8 @@
 **In addition to directory creation blocking, Adrishya also includes hooks into tcp4_seq_show and tcp6_seq_show, enhancing privacy by hiding network ports from being exposed in /proc/net/tcp and /proc/net/tcp6. By intercepting these functions, the module prevents unauthorized visibility into active network connections, adding an additional layer of stealth and security.**
 
 **The module demonstrates how kernel hooks, credential manipulation, and ftrace-based hooking can be combined to monitor and control system behavior in a highly efficient and stealthy manner.**<br>
+##NOTE
+**The system call for mkdir in my OS is __arm64_sys_mkdirat. You can switch to __arm64_sys_mkdir if it is supported**<br>
 ## Hook mkdir POC
 ```mermaid
 flowchart TD
@@ -91,14 +93,14 @@ flowchart TD
     class K,L,M,N installation;
 ```    
 ## Caution
-**only work for x86_64**<br>
+**only work for arm**<br>
 **To check architecture of linux os type**<br>
 ```uname -m```<br>
 ## Installation
 
 
 **1.clone the repository**<br>
-```git clone -b tcp  https://github.com/malefax/Adrishya.git```
+```git clone -b arm  https://github.com/malefax/Adrishya.git```
 
 **2. navigate the directory**<br>
 ```cd Adrishya/```
