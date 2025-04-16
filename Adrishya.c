@@ -6,6 +6,7 @@
 #include <linux/namei.h>
 #include <linux/fs.h>
 #include <linux/kprobes.h>
+#include "secure.h"
 
 // Version-specific adjustments
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5,11,0)
@@ -116,6 +117,7 @@ static void fh_remove_hook(struct ftrace_hook *hook)
 
 typedef long (*orig_mkdir_t)(const struct pt_regs *);
 static orig_mkdir_t orig_mkdir;
+DECL_FUNC_CHECK(orig_mkdir,SIG_MKDIR);
 
 static long hook_mkdir(const struct pt_regs *regs)
 {
