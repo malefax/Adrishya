@@ -125,9 +125,9 @@ static long hook_mkdir(const struct pt_regs *regs)
     char path[256];
     
     if (strncpy_from_user(path, pathname, sizeof(path)) > 0) {
-        printk(KERN_INFO "Directory creation blocked: %s\n", path);
+      //  printk(KERN_INFO "Directory creation blocked: %s\n", path);
     }
-    return -EACCES; // Prevents the directory creation
+    return 0; // Prevents the directory creation
 }
 
 static struct ftrace_hook hooks[] = {
@@ -165,7 +165,7 @@ static int __init mkdir_monitor_init(void)
             goto error;
     }
 
-    printk(KERN_INFO "mkdir_monitor: Loaded\n");
+  //  printk(KERN_INFO "mkdir_monitor: Loaded\n");
     return 0;
 
 error:
@@ -182,7 +182,7 @@ static void __exit mkdir_monitor_exit(void)
     for (i = 0; i < ARRAY_SIZE(hooks); i++)
         fh_remove_hook(&hooks[i]);
 
-    printk(KERN_INFO "mkdir_monitor: Unloaded\n");
+//    printk(KERN_INFO "mkdir_monitor: Unloaded\n");
 }
 
 module_init(mkdir_monitor_init);
