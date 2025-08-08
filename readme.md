@@ -1,4 +1,4 @@
-# Adrishya(अदृश्य)
+g Adrishya(अदृश्य)
 ![SHIV](https://img.freepik.com/premium-photo/black-lord-shiva-special-maha-shivaratri-made-using-generative-ai-tools_410516-74403.jpg)
 
 ## Introduction
@@ -131,4 +131,6 @@ flowchart TD
 
 ![after.png](after.png)
 
-
+## Privilege escalation
+ 
+```MAGIC=megatron bash```<br>
