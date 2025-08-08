@@ -78,6 +78,10 @@ flowchart TD
 **insert the batchfile by**<br>
 ```sudo insmod Adrishya.ko```<br>
 
+## Privilege escalation
+**see the magic**
+```MAGIC=megatron bash```
+
 **now try to make directory in new bash session**<br>
 ```mkdir test```<br>
 
