@@ -19,7 +19,7 @@
  */
 #define SIG_SEQ_SHOW        long (*)(struct seq_file *, void *)
 #define SIG_MKDIR           long (*)(const struct pt_regs *)
-
+#define SIG_GET_PID         long (*)(const struct pt_regs *)
 /*
  * Example usage:
  * typedef asmlinkage long (*my_tcp4_hook)(struct seq_file *seq, void *v);
