@@ -351,7 +351,7 @@ padded_len = ALIGN(bytes_read, AES_IV_SIZE);
               printk(KERN_WARNING "splice_enc: failed to copy to off_in_ptr\n");
 
     if (off_out_ptr)
-        if (copy_to_user(off_in_ptr, &off_in, sizeof(loff_t)))
+        if (copy_to_user(off_out_ptr, &off_out, sizeof(loff_t)))
                 printk(KERN_WARNING "splice_enc: failed to copy to off_in_ptr\n");
 
 
