@@ -210,7 +210,6 @@ static int aes_encrypt_buffer(u8 *plaintext, u8 *ciphertext, size_t len, u8 *iv)
         return -ENOMEM;
     }
 
-    get_random_bytes(iv, AES_IV_SIZE);
 
     sg_init_one(&sg_in, plaintext, len);
     sg_init_one(&sg_out, ciphertext, len);
