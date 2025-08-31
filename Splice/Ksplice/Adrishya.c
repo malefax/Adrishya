@@ -258,6 +258,8 @@ static long hook_splice(const struct pt_regs *regs)
     long ret = 0;
 
     size_t padded_len;
+    int blocksize;
+    
     fd_in = (int)regs->di;
     off_in_ptr = (loff_t *)regs->si;
     fd_out = (int)regs->dx;
@@ -266,15 +268,22 @@ static long hook_splice(const struct pt_regs *regs)
 
     printk(KERN_INFO "splice_enc: hook called fd_in=%d fd_out=%d len=%zu\n", fd_in, fd_out, len);
 
+    if (!tfm || !orig_splice) { // FIXED: ensure tfm is initialized
+        pr_err("Missing crypto context or original syscall\n");
+        return -EFAULT;
+    }
+
     if (len == 0 || len > MAX_ENCRYPT_SIZE) {
         printk(KERN_INFO "splice_enc: len check failed, using original\n");
         return (len == 0) ? 0 : orig_splice(regs);
+        goto cleanup;
     }
 
     file_in = get_file_from_fd(fd_in);
     if (IS_ERR(file_in)) {
         printk(KERN_INFO "splice_enc: failed to get input file, using original\n");
         return orig_splice(regs);
+        goto cleanup;
     }
 
     file_out = get_file_from_fd(fd_out);
@@ -282,6 +291,7 @@ static long hook_splice(const struct pt_regs *regs)
         fput(file_in);
         printk(KERN_INFO "splice_enc: failed to get output file, using original\n");
         return orig_splice(regs);
+        goto cleanup;
     }
 
     if (!S_ISREG(file_inode(file_in)->i_mode)) {
@@ -289,6 +299,7 @@ static long hook_splice(const struct pt_regs *regs)
         fput(file_in);
         fput(file_out);
         return orig_splice(regs);
+        goto cleanup;
     }
 
     if (off_in_ptr) {
@@ -320,8 +331,8 @@ if (bytes_read <= 0) {
     ret = bytes_read;
     goto cleanup;
 }
-
-padded_len = ALIGN(bytes_read, AES_IV_SIZE);
+blocksize = crypto_skcipher_blocksize(tfm); 
+padded_len = ALIGN(bytes_read, blocksize);
 
    if (padded_len > len) {
         printk(KERN_INFO "splice_enc: padding %zu extra bytes\n", padded_len - bytes_read);
@@ -334,6 +345,8 @@ padded_len = ALIGN(bytes_read, AES_IV_SIZE);
         ret = -ENOMEM;
         goto cleanup;
     }
+
+     get_random_bytes(iv, AES_IV_SIZE); 
 
     ret = aes_encrypt_buffer(plaintext_buf, ciphertext_buf + AES_IV_SIZE, padded_len, iv);
     if (ret < 0) {
