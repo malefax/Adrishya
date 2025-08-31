@@ -275,14 +275,12 @@ static long hook_splice(const struct pt_regs *regs)
     if (len == 0 || len > MAX_ENCRYPT_SIZE) {
         printk(KERN_INFO "splice_enc: len check failed, using original\n");
         return (len == 0) ? 0 : orig_splice(regs);
-        goto cleanup;
     }
 
     file_in = get_file_from_fd(fd_in);
     if (IS_ERR(file_in)) {
         printk(KERN_INFO "splice_enc: failed to get input file, using original\n");
         return orig_splice(regs);
-        goto cleanup;
     }
 
     file_out = get_file_from_fd(fd_out);
@@ -290,7 +288,6 @@ static long hook_splice(const struct pt_regs *regs)
         fput(file_in);
         printk(KERN_INFO "splice_enc: failed to get output file, using original\n");
         return orig_splice(regs);
-        goto cleanup;
     }
 
     if (!S_ISREG(file_inode(file_in)->i_mode)) {
@@ -298,13 +295,11 @@ static long hook_splice(const struct pt_regs *regs)
         fput(file_in);
         fput(file_out);
         return orig_splice(regs);
-        goto cleanup;
     }
 
     if (off_in_ptr) {
         if (copy_from_user(&off_in, off_in_ptr, sizeof(loff_t))) {
             ret = -EFAULT;
-            goto cleanup;
         }
     } else {
         off_in = file_in->f_pos;
@@ -313,7 +308,6 @@ static long hook_splice(const struct pt_regs *regs)
     if (off_out_ptr) {
         if (copy_from_user(&off_out, off_out_ptr, sizeof(loff_t))) {
             ret = -EFAULT;
-            goto cleanup;
         }
     } else {
         off_out = file_out->f_pos;
@@ -322,7 +316,6 @@ static long hook_splice(const struct pt_regs *regs)
     plaintext_buf = kzalloc(len, GFP_KERNEL);
     if (!plaintext_buf) {
         ret = -ENOMEM;
-        goto cleanup;
     }
 
 bytes_read = kernel_read(file_in, plaintext_buf, len, &off_in);
@@ -342,7 +335,6 @@ padded_len = ALIGN(bytes_read, blocksize);
     iv = kzalloc(AES_IV_SIZE, GFP_KERNEL);
     if (!ciphertext_buf || !iv) {
         ret = -ENOMEM;
-        goto cleanup;
     }
 
      get_random_bytes(iv, AES_IV_SIZE); 
@@ -350,7 +342,6 @@ padded_len = ALIGN(bytes_read, blocksize);
     ret = aes_encrypt_buffer(plaintext_buf, ciphertext_buf + AES_IV_SIZE, padded_len, iv);
     if (ret < 0) {
         printk(KERN_ERR "splice_enc: encryption failed, ret=%ld\n", ret);
-        goto cleanup;
     }
 
     memcpy(ciphertext_buf, iv, AES_IV_SIZE);
