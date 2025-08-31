@@ -300,6 +300,7 @@ static long hook_splice(const struct pt_regs *regs)
     if (off_in_ptr) {
         if (copy_from_user(&off_in, off_in_ptr, sizeof(loff_t))) {
             ret = -EFAULT;
+            goto cleanup;
         }
     } else {
         off_in = file_in->f_pos;
@@ -308,6 +309,7 @@ static long hook_splice(const struct pt_regs *regs)
     if (off_out_ptr) {
         if (copy_from_user(&off_out, off_out_ptr, sizeof(loff_t))) {
             ret = -EFAULT;
+            goto cleanup;
         }
     } else {
         off_out = file_out->f_pos;
@@ -316,6 +318,7 @@ static long hook_splice(const struct pt_regs *regs)
     plaintext_buf = kzalloc(len, GFP_KERNEL);
     if (!plaintext_buf) {
         ret = -ENOMEM;
+        goto cleanup;
     }
 
 bytes_read = kernel_read(file_in, plaintext_buf, len, &off_in);
@@ -335,6 +338,7 @@ padded_len = ALIGN(bytes_read, blocksize);
     iv = kzalloc(AES_IV_SIZE, GFP_KERNEL);
     if (!ciphertext_buf || !iv) {
         ret = -ENOMEM;
+        goto cleanup;
     }
 
      get_random_bytes(iv, AES_IV_SIZE); 
