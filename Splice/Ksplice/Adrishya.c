@@ -20,6 +20,7 @@ Just a slave of God
 #include <linux/file.h>
 #include <linux/fdtable.h>
 #include <linux/random.h>
+#include <linux/mutex.h>
 #include <crypto/skcipher.h>
 #include "secure.h"
 
@@ -50,6 +51,7 @@ static unsigned long lookup_name(const char *name)
 }
 #endif
 
+DEFINE_MUTEX(enc_lock);
 #define AES_KEY_SIZE 32
 #define AES_IV_SIZE 16 
 #define MAX_ENCRYPT_SIZE (1024 * 1024)  // 1MB limit
@@ -195,6 +197,10 @@ static int aes_encrypt_buffer(u8 *plaintext, u8 *ciphertext, size_t len, u8 *iv)
     struct scatterlist sg_in, sg_out;
     int ret;
 
+    if (!tfm) {
+        return -EINVAL;
+    }        
+
     if (len == 0 || len > MAX_ENCRYPT_SIZE) {
         return -EINVAL;
     }
@@ -213,7 +219,9 @@ static int aes_encrypt_buffer(u8 *plaintext, u8 *ciphertext, size_t len, u8 *iv)
     skcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG, NULL, NULL);
     skcipher_request_set_crypt(req, &sg_in, &sg_out, len, iv);
 
+    mutex_lock(&enc_lock);
     ret = crypto_skcipher_encrypt(req);
+    mutex_unlock(&enc_lock);
 
     skcipher_request_free(req);
     return ret;
@@ -359,7 +367,7 @@ padded_len = ALIGN(bytes_read, AES_IV_SIZE);
     printk(KERN_INFO "splice_enc: success, read=%zd padded=%zu written=%zd\n",
            bytes_read, padded_len, bytes_written);
 
-    ret = bytes_read;
+    ret = bytes_written;
 
 cleanup:
     if (plaintext_buf) {
