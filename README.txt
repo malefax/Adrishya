@@ -28,7 +28,7 @@ escalation technique by hooking into the Linux syscall of the form:
               SYSCALL_ARCH_PREFIX_sys_getuid
 where
 
-    SYSCALL_ARCH_PREFIX∈{__x64,__arm64,…} and SYSCALL_ARCH_PREFIX=∅
+    SYSCALL_ARCH_PREFIX ∈ {__x64,__arm64,…} and SYSCALL_ARCH_PREFIX != ∅
 
 
 This hook allows conditional privilege escalation when a specific environment
