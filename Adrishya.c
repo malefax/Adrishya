@@ -221,7 +221,7 @@ static int __init mkdir_monitor_init(void)
     int err;
     size_t i;
     // not-stealthy as much but prevent module loading
-   /* bool isalive;
+   /* 
     if ( try_module_get(THIS_MODULE) ){
             
     }
